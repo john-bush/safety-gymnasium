@@ -114,6 +114,11 @@ def __combine(tasks, agents, max_episode_steps):
 # Safety Navigation
 # ----------------------------------------
 
+# Custom Environments
+# ----------------------------------------
+custom_tasks = {'TestTask0': {}, 'TestTask1': {}}
+__combine(custom_tasks, robots, max_episode_steps=1000)
+
 # Button Environments
 # ----------------------------------------
 button_tasks = {'Button0': {}, 'Button1': {}, 'Button2': {}}

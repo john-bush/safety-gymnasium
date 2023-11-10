@@ -23,6 +23,10 @@ from safety_gymnasium.tasks.safe_multi_agent.tasks.multi_goal.multi_goal_level1 
 from safety_gymnasium.tasks.safe_multi_agent.tasks.multi_goal.multi_goal_level2 import (
     MultiGoalLevel2,
 )
+
+from safety_gymnasium.tasks.safe_navigation.custom.test_env0 import TestTaskLevel0
+from safety_gymnasium.tasks.safe_navigation.custom.test_env1 import TestTaskLevel1
+
 from safety_gymnasium.tasks.safe_navigation.button.button_level0 import ButtonLevel0
 from safety_gymnasium.tasks.safe_navigation.button.button_level1 import ButtonLevel1
 from safety_gymnasium.tasks.safe_navigation.button.button_level2 import ButtonLevel2
