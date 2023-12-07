@@ -23,6 +23,7 @@ class TestTaskLevel0(BaseTask):
 
     def __init__(self, config) -> None:
         super().__init__(config=config)
+        print("TestTaskLevel0.__init__()")
 
         self.placements_conf.extents = [-1, -1, 1, 1]
 

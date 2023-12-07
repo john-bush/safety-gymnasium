@@ -28,6 +28,7 @@ class ButtonLevel0(BaseTask):
 
     def __init__(self, config) -> None:
         super().__init__(config=config)
+        print("Button Task")
 
         self.placements_conf.extents = [-1, -1, 1, 1]
 

@@ -46,4 +46,5 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--env', default='SafetyPointFormulaOne2Debug-v0')
     args = parser.parse_args()
+    print("Starting Env.py...")
     run_random(args.env)

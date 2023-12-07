@@ -18,6 +18,8 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
+from safety_gymnasium.assets.mocaps.perlin_flow import *
+
 from safety_gymnasium.assets.color import COLOR
 from safety_gymnasium.assets.group import GROUP
 from safety_gymnasium.bases.base_object import Mocap
@@ -26,14 +28,13 @@ from safety_gymnasium.bases.base_object import Mocap
 @dataclass
 class Gremlins(Mocap):  # pylint: disable=too-many-instance-attributes
     """Gremlins (moving objects we should avoid)"""
-
+    floor_size: np.array = np.array([10, 10, 0])
     name: str = 'gremlins'
-    num: int = 0  # Number of gremlins in the world
+    num: int = 10  # Number of gremlins in the world
     size: float = 0.1
     placements: list = None  # Gremlins placements list (defaults to full extents)
     locations: list = field(default_factory=list)  # Fixed locations to override placements
     keepout: float = 0.5  # Radius for keeping out (contains gremlin path)
-    travel: float = 0.3  # Radius of the circle traveled in
     contact_cost: float = 1.0  # Cost for touching a gremlin
     dist_threshold: float = 0.2  # Threshold for cost for being too close
     dist_cost: float = 1.0  # Cost for being within distance threshold
@@ -46,6 +47,31 @@ class Gremlins(Mocap):  # pylint: disable=too-many-instance-attributes
     is_constrained: bool = True
     is_meshed: bool = False
     mesh_name: str = name[:-1]
+    
+    rotation_offset: float = 0.0
+    
+    speed_modifier: float = 0.1
+    
+
+
+    def __post_init__(self) -> None:
+        self.travel: float = self.floor_size[0]  # Radius of the circle traveled in
+        self.centers: list = [
+            (self.rotation_offset, 0),
+            (-self.rotation_offset, 0),
+            (0, self.rotation_offset),
+            (0, -self.rotation_offset),
+        ]
+        self.phase_shifts = np.random.uniform(0, 2 * np.pi, 2*self.num)
+        self.speed_multipliers = np.random.uniform(0.5, 1.5, self.num)
+        self.directions = 2*np.random.randint(0,2,size=self.num)-1
+        self.center_assignments = np.random.randint(0,4,size=self.num)
+        self.ang_vel = 0.5 / (self.travel / 2)
+
+        self.flow_field_dim1 = 20 * self.floor_size[0] + 1
+        self.flow_field_dim2 = 20 * self.floor_size[1] + 1
+        self.flow_field: np.array = create_flow_field_from_noise(self.flow_field_dim1,self.flow_field_dim2, 10, 2)
+
 
     def get_config(self, xy_pos, rot):
         """To facilitate get specific config for this object"""
@@ -129,11 +155,39 @@ class Gremlins(Mocap):  # pylint: disable=too-many-instance-attributes
 
     def move(self):
         """Set mocap object positions before a physics step is executed."""
-        phase = float(self.engine.data.time)
+        phase = float(self.engine.data.time) * self.ang_vel
         for i in range(self.num):
             name = f'gremlin{i}'
-            target = np.array([np.sin(phase), np.cos(phase)]) * self.travel
-            pos = np.r_[target, [self.size]]
+            position = self.pos[i]
+            dy = 0
+            dx = 0
+
+            # scale the world position to the size of the flow field
+            translated_position = 10 * (position + self.floor_size)
+            # if within the valid space, compute random noise injection from flowfield
+            if not (position[0] > self.floor_size[0] or position[1] > self.floor_size[1] or \
+                 position[0] < -self.floor_size[0] or position[1] < -self.floor_size[1]):
+                
+                angle = self.flow_field[int(translated_position[0])][int(translated_position[1])]
+                dx = np.cos(angle) * self.speed_modifier
+                dy = np.sin(angle) * self.speed_modifier
+
+            # calculate individual gremlin phase with shift and direction
+            gremlin_phase = (phase + self.phase_shifts[i]) * self.speed_multipliers[i]
+            if self.directions[i] == -1:
+                gremlin_phase = (3 * np.pi) - gremlin_phase
+
+            # calculate target position
+            target = np.array([np.sin(gremlin_phase), np.cos(gremlin_phase)]) * self.travel
+            
+            # offset the target position by the center cluster of the gremlin and the noise injection
+            center = self.centers[self.center_assignments[i]]
+            new_x = target[0] + dx + center[0]
+            new_y = target[1] + dy + center[1]
+            
+            # set the new position
+            new_pos = np.array([new_x, new_y])
+            pos = np.r_[new_pos, [self.size]]
             self.set_mocap_pos(name + 'mocap', pos)
 
     @property

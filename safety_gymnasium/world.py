@@ -61,7 +61,7 @@ class World:  # pylint: disable=too-many-instance-attributes
         'agent_base': 'assets/xmls/car.xml',  # Which agent XML to use as the base
         'agent_xy': np.zeros(2),  # agent XY location
         'agent_rot': 0,  # agent rotation about Z axis
-        'floor_size': [3.5, 3.5, 0.1],  # Used for displaying the floor
+        'floor_size': [5, 5, 0.1],  # Used for displaying the floor
         # FreeGeoms -- this is processed and added by the Builder class
         'free_geoms': {},  # map from name -> object dict
         # Geoms -- similar to objects, but they are immovable and fixed in the scene.

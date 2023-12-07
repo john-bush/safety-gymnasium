@@ -113,8 +113,8 @@ class FloorConf:
         size (tuple): Size of floor in environments.
     """
 
-    type: str = 'mat'  # choose from 'mat' and 'village'
-    size: tuple = (3.5, 3.5, 0.1)
+    type: str = 'village'  # choose from 'mat' and 'village'
+    size: tuple = (5, 5, 0.1)
 
 
 @dataclass

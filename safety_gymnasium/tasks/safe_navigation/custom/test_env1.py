@@ -10,6 +10,10 @@ class TestTaskLevel1(TestTaskLevel0):
 
     def __init__(self, config) -> None:
         super().__init__(config=config)
+        print("TestTaskLevel1")
 
-        self.placements_conf.extents = [-1.5, -1.5, 1.5, 1.5]
-        self._add_mocaps(Gremlins(num=8, keepout=0.18))
+        self.placements_conf.extents = [-5, -5, 5, 5]
+        
+        gremlin_density = 0.2 # decreasing will increase density
+        num_gremlins = 80 # number of gremlins
+        self._add_mocaps(Gremlins(num=num_gremlins, keepout=0.18, floor_size=self.floor_conf.size, rotation_offset=(self.floor_conf.size[0] * gremlin_density)))
