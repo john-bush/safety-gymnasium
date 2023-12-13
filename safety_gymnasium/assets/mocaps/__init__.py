@@ -16,6 +16,7 @@
 
 # Extra mocap bodies used for control (equality to object of same name)
 from safety_gymnasium.assets.mocaps.gremlins import Gremlins
+from safety_gymnasium.assets.mocaps.gremlins_old import Gremlins_Old
 
 
-MOCAPS_REGISTER = [Gremlins]
+MOCAPS_REGISTER = [Gremlins, Gremlins_Old]
