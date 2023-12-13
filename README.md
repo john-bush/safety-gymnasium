@@ -1,6 +1,6 @@
-Here are videos of the goals for the project: https://drive.google.com/drive/folders/1st9B78gGdSCnWAWIHhtEOwLniSbsA8OF?usp=drive_link
+Here are videos of the goal tasks for the project: https://drive.google.com/drive/folders/1st9B78gGdSCnWAWIHhtEOwLniSbsA8OF?usp=drive_link
 
-
+Here is our report: https://github.com/john-bush/safety-gymnasium/blob/main/CSCI_513_Project.pdf
 
 <div align="center">
 <h1>
