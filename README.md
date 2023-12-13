@@ -1,3 +1,7 @@
+Here are videos of the goals for the project: https://drive.google.com/drive/folders/1st9B78gGdSCnWAWIHhtEOwLniSbsA8OF?usp=drive_link
+
+
+
 <div align="center">
 <h1>
   Safety-Gymnasium
